@@ -15,6 +15,8 @@
     <Folder Include="Views\Shared\" />
     <Folder Include="Views\Reviews\" />
     <Folder Include="Views\Products\" />
+    <Folder Include="Views\Account\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
