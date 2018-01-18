@@ -8,9 +8,10 @@ using Gummi.Models;
 namespace Gummi.Migrations
 {
     [DbContext(typeof(GummiDbContext))]
-    partial class GummiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180118144904_authorization")]
+    partial class authorization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2");

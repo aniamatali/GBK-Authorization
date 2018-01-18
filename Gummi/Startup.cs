@@ -11,11 +11,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Gummi
 {
 	public class Startup
 	{
+        
+        public IConfigurationRoot Configuration { get; set; }
 
 		public Startup(IHostingEnvironment env)
 		{
@@ -25,10 +28,6 @@ namespace Gummi
 			Configuration = builder.Build();
 		}
 
-		public IConfigurationRoot Configuration { get; set; }
-
-		// This method gets called by the runtime. Use this method to add services to the container.
-		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMvc();
@@ -36,7 +35,19 @@ namespace Gummi
 					.AddDbContext<GummiDbContext>(options =>
 											  options
 												   .UseMySql(Configuration["ConnectionStrings:DefaultConnection"]));
+			services.AddIdentity<ApplicationUser, IdentityRole>()
+				.AddEntityFrameworkStores<GummiDbContext>()
+				.AddDefaultTokenProviders();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 0;
+                options.Password.RequireDigit = false;
+            });
 		}
+		
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -45,6 +56,7 @@ namespace Gummi
 
 			app.UseDeveloperExceptionPage();
 
+            app.UseIdentity();
 
 			app.UseStaticFiles();
 
@@ -52,7 +64,7 @@ namespace Gummi
 			{
 				routes.MapRoute(
 					name: "default",
-					template: "{controller=Home}/{action=Index}/{id?}");
+					template: "{controller=Account}/{action=Index}/{id?}");
 			});
 		}
 	}
